@@ -1,0 +1,49 @@
+/* Spartanblue identity, scoped to this independent application. */
+:root {
+  --green: #327b9f;
+  --green-dark: #173b50;
+  --orange: #bf8e2c;
+  --paper: #f3f6f8;
+  --cream: #f3f6f8;
+  --ink: #202b33;
+}
+.auth-shell { background: #f6f8fa; }
+.auth-story { background: #173b50; color: white; }
+.auth-city { object-position: 50% 50%; }
+.auth-story-shade {
+  background: linear-gradient(180deg, rgba(12, 38, 54, .66), rgba(18, 54, 74, .52) 50%, rgba(9, 31, 45, .87));
+}
+.auth-story .story-brand img {
+  content: url('/spartanblue-logo-white.png');
+  width: clamp(230px, 25vw, 340px);
+  height: auto;
+}
+.story-copy { margin-top: clamp(60px, 12vh, 140px); }
+.story-copy h1 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(34px, 3.8vw, 58px);
+  font-weight: 400;
+  line-height: 1.13;
+  letter-spacing: -1px;
+  color: white;
+}
+.story-copy h1 em { color: #ead4a5; }
+.story-copy p { color: #f0f5f7; font-weight: 400; }
+.brand-rule { height: 3px; }
+.brand-rule i:first-child { background: #79aec7; }
+.brand-rule i:last-child { background: #d8af5c; }
+.auth-ribbon { display: none; }
+.auth-copyright { color: #d4e0e6; font-size: 12px; }
+.auth-card { border-radius: 20px; box-shadow: 0 16px 54px #173b5010; }
+.auth-card h2 { font-size: clamp(29px, 2.8vw, 38px); letter-spacing: -.8px; }
+.sidebar-brand img { width: 174px; height: auto; }
+.primary-button { background: #327b9f; }
+.primary-button:hover { background: #235c79; }
+:root[data-theme='dark'] .brand img { content: url('/spartanblue-logo-white.png'); }
+:root[data-theme='dark'] .auth-story-shade {
+  background: linear-gradient(180deg, #0c2636b8, #12364a99 50%, #091f2deb);
+}
+:root[data-theme='dark'] .story-copy p { color: #f0f5f7; }
+@media (max-width: 780px) {
+  .auth-brand-mobile img { width: 215px; height: auto; margin-bottom: 12px; }
+}

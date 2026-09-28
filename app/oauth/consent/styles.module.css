@@ -1,0 +1,217 @@
+.page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 32px 20px;
+  color: #111827;
+  background:
+    radial-gradient(circle at 12% 16%, rgba(53, 102, 172, 0.13), transparent 30%),
+    radial-gradient(circle at 88% 85%, rgba(166, 26, 26, 0.1), transparent 28%),
+    #f6f3ee;
+}
+
+.card {
+  width: min(620px, 100%);
+  padding: 34px;
+  border: 1px solid rgba(32, 53, 90, 0.14);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 24px 65px rgba(32, 53, 90, 0.16);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 24px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.brand img {
+  width: 210px;
+  height: auto;
+  object-fit: contain;
+}
+
+.brand span {
+  color: #4b5563;
+  font-size: 15px;
+}
+
+.heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 26px;
+}
+
+.heading > svg {
+  flex: 0 0 auto;
+  color: #327b9f;
+  margin-top: 3px;
+}
+
+.heading h1 {
+  margin: 0 0 7px;
+  font-size: clamp(25px, 4vw, 34px);
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.heading p,
+.notice,
+.scopeText {
+  margin: 0;
+  color: #4b5563;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.permissions {
+  padding: 20px;
+  border-radius: 16px;
+  background: #f3f7fc;
+  border: 1px solid #dce8f6;
+}
+
+.permissions h2 {
+  margin: 0 0 14px;
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.permissions > div {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 11px;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.permissions svg {
+  flex: 0 0 auto;
+  color: #2e7d5b;
+  margin-top: 2px;
+}
+
+.scopeText {
+  margin-top: 16px;
+  font-size: 14px;
+}
+
+.notice {
+  margin-top: 18px;
+  padding-left: 13px;
+  border-left: 3px solid #327b9f;
+  font-size: 14px;
+}
+
+.form {
+  display: grid;
+  gap: 18px;
+}
+
+.form label {
+  display: grid;
+  gap: 7px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.form input {
+  width: 100%;
+  padding: 13px 14px;
+  color: #111827;
+  font: inherit;
+  font-weight: 450;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.form input:focus {
+  outline: 3px solid rgba(53, 102, 172, 0.18);
+  border-color: #327b9f;
+}
+
+.form button,
+.actions button {
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border-radius: 10px;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.form button,
+.approve {
+  color: #fff;
+  border: 1px solid #285797;
+  background: #327b9f;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.deny {
+  color: #374151;
+  border: 1px solid #d1d5db;
+  background: #fff;
+}
+
+.form button:disabled,
+.actions button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.error {
+  margin: 20px 0 0;
+  padding: 12px 14px;
+  color: #8b1515;
+  border-radius: 10px;
+  background: #fff1f1;
+  border: 1px solid #f1caca;
+}
+
+.loading {
+  padding: 40px 0;
+  color: #4b5563;
+  text-align: center;
+  font-size: 17px;
+}
+
+.card footer {
+  margin-top: 28px;
+  color: #6b7280;
+  text-align: center;
+  font-size: 12px;
+}
+
+@media (max-width: 600px) {
+  .card {
+    padding: 24px 20px;
+    border-radius: 18px;
+  }
+
+  .brand {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .actions {
+    grid-template-columns: 1fr;
+  }
+}
