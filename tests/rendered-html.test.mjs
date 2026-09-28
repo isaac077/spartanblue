@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
-test("keeps the Thomas Wagner.MX product identity", async () => {
+test("keeps the independent Spartanblue workspace working", async () => {
   const [
     page,
     layout,
@@ -245,10 +245,10 @@ test("keeps the Thomas Wagner.MX product identity", async () => {
     new URL("../app/components/RichTextEditor.tsx", import.meta.url),
     "utf8",
   );
-  assert.match(page, /ThomasWagner\.MX Workspace/);
+  assert.match(page, /Equipo Spartanblue/);
   assert.doesNotMatch(page, /como en Basecamp/i);
-  assert.match(page, /\/tw-logo\.png/);
-  assert.match(layout, /\/favicon\.svg/);
+  assert.match(page, /\/spartanblue-logo\.png/);
+  assert.match(layout, /\/spartanblue-favicon\.png/);
   assert.match(page, /Notificaciones/);
   assert.match(page, /notificationTab/);
   assert.match(page, /Nuevas <span>\{newNotificationsCount\}<\/span>/);
@@ -340,10 +340,9 @@ test("keeps the Thomas Wagner.MX product identity", async () => {
   assert.match(page, /addPersonToProject\(person\)/);
   assert.match(page, /te agregó a un proyecto/);
   assert.match(page, /from\("project_members"\)/);
-  assert.match(page, /\/mexico-city-auth\.png/);
+  assert.match(page, /\/spartanblue-coast\.jpg/);
   assert.match(page, /linkedTaskId/);
-  assert.match(page, /Connecting opportunities/);
-  assert.doesNotMatch(page, /Revisa tu correo para confirmarla/);
+  assert.match(page, /Cuenta creada\. Revisa tu correo para confirmar la cuenta/);
   assert.match(page, /Cambiar mi foto/);
   assert.match(page, /from\("task_assignees"\)\.upsert/);
   assert.match(page, /async function unassignPerson/);
@@ -504,9 +503,9 @@ test("keeps the Thomas Wagner.MX product identity", async () => {
   assert.match(css, /\.create-assignee-suggestions/);
   assert.doesNotMatch(page, /const seeded = initialTasks/);
   assert.doesNotMatch(page, /Profesional · minimalista · consistente/);
-  assert.match(layout, /ThomasWagner\.MX Workspace/);
-  assert.match(css, /--green:\s*#3566ac/i);
-  assert.match(css, /--orange:\s*#a61a1a/i);
+  assert.match(layout, /title: "Spartanblue"/);
+  assert.match(css, /--green:\s*#327b9f/i);
+  assert.match(css, /--orange:\s*#c6932c/i);
   assert.match(packageJson, /"build": "next build"/);
   assert.match(supabaseClient, /persistSession:\s*true/);
   assert.match(supabaseClient, /autoRefreshToken:\s*true/);
@@ -533,8 +532,7 @@ test("keeps the Thomas Wagner.MX product identity", async () => {
   assert.match(emailDeliveryMigration, /enable row level security/);
   assert.match(emailDeliveryMigration, /revoke all on table/);
   assert.match(emailDeliveryMigration, /notification_id uuid primary key/);
-  assert.match(emailTemplate, /Thomas/);
-  assert.match(emailTemplate, /Wagner/);
+  assert.match(emailTemplate, /Spartanblue/);
   assert.match(emailTemplate, /Abrir to-do/);
   assert.match(emailTemplate, /taskNotificationText/);
   assert.match(projectAccessMigration, /is_current_user_project_member/);
@@ -668,8 +666,8 @@ test("keeps the Thomas Wagner.MX product identity", async () => {
   assert.match(ticketEdgeFunction, /SUPABASE_SERVICE_ROLE_KEY/);
   assert.match(ticketEdgeFunction, /MAX_BODY_BYTES/);
   assert.match(dailyEdgeFunction, /SUPABASE_SERVICE_ROLE_KEY/);
-  assert.match(signupDomainMigration, /thomaswagner\.mx/);
-  assert.match(page, /Usa tu correo corporativo @thomaswagner\.mx/);
+  assert.match(signupDomainMigration, /registration accepts personal and corporate email/i);
+  assert.doesNotMatch(page, /thomaswagner|wmp/i);
   assert.match(page, /password\.length < 12/);
   assert.match(page, /¿Olvidaste tu contraseña\?/);
   assert.match(page, /resetPasswordForEmail\(email\)/);
@@ -702,7 +700,7 @@ test("keeps the Thomas Wagner.MX product identity", async () => {
   assert.match(driveUploadRoute, /from\("project_minutes"\)/);
   assert.match(
     driveFileRoute,
-    /properties\.source !== "thomaswagner-workspace"/,
+    /properties\.source !== "spartanblue"/,
   );
   assert.match(driveFileRoute, /properties\.category === "minute-pdf"/);
   assert.match(driveFileRoute, /Content-Disposition/);
@@ -716,15 +714,14 @@ test("keeps the Thomas Wagner.MX product identity", async () => {
   assert.match(driveHelpers, /drive\/v3\/about/);
   assert.match(driveHelpers, /storageQuota\(limit,usage,usageInDrive\)/);
   assert.match(driveQuotaRoute, /authenticateRequest\(request\)/);
-  assert.match(driveQuotaRoute, /jpacheco@thomaswagner\.mx/);
+  assert.doesNotMatch(driveQuotaRoute, /@/);
   assert.match(driveQuotaRoute, /getDriveStorageQuota/);
   assert.match(envExample, /GOOGLE_DRIVE_REFRESH_TOKEN=/);
   assert.match(weeklyReportRoute, /\.neq\("status", "done"\)/);
   assert.match(weeklyReportRoute, /\.neq\("status", "backlog"\)/);
-  assert.match(weeklyReportRoute, /normalized\.includes\("the wmp club"\)/);
-  assert.match(weeklyReportRoute, /normalized\.includes\("wmp"\)/);
-  assert.match(weeklyReportRoute, /accountName: "ThomasWagner\.MX"/);
-  assert.match(weeklyReportRoute, /normalized\.includes\("thomaswagner"\)/);
+  assert.match(weeklyReportRoute, /accountId: project\.id/);
+  assert.match(weeklyReportRoute, /accountName: cleanUntrustedText\(project\.name/);
+  assert.doesNotMatch(weeklyReportRoute, /Thomas|WMP|wmp/i);
   assert.match(weeklyReportRoute, /WORKSPACE_REPORT_SECRET/);
   assert.match(weeklyReportRoute, /auth\.getUser\(token\)/);
   assert.match(weeklyReportRoute, /phone: cleanUntrustedText\(person\.phone/);
@@ -785,16 +782,9 @@ test("keeps the Thomas Wagner.MX product identity", async () => {
     weeklyReportRoute,
     /\.select\("id,title,status,due_date,projects\(id,name\)"\)/,
   );
-  assert.match(weeklyReportRoute, /function wmpProjectLabel/);
-  assert.match(weeklyReportRoute, /replace\(\/\\bwmp\\b\/gi, " "\)/);
-  assert.match(
-    weeklyReportRoute,
-    /accountId === "wmp-mexico-advisors"[\s\S]*wmpProjectLabel\(projectName\)/,
-  );
-  assert.match(
-    weeklyReportRoute,
-    /topic: projectLabel \? `\[\$\{projectLabel\}\] \$\{title\}` : title/,
-  );
+  assert.match(weeklyReportRoute, /accountByProject\.set\(project\.id, account\)/);
+  assert.match(weeklyReportRoute, /topic: title/);
+  assert.doesNotMatch(weeklyReportRoute, /Thomas|WMP|wmp/i);
   assert.match(weeklyReportRoute, /if \(!date\) return "Sin fecha"/);
   assert.match(weeklyReportRoute, /update: taskDueLabel\(task\.due_date\)/);
   assert.match(
@@ -902,7 +892,7 @@ test("exposes the authenticated Workspace MCP and keeps steps below context", as
     assert.match(mcpServer, new RegExp(`"${tool}"`));
   assert.match(
     mcpServer,
-    /PDF semanal breve[\s\S]*títulos y fechas[\s\S]*tareas de WMP incluyen la etiqueta/,
+    /PDF semanal breve[\s\S]*títulos y fechas[\s\S]*agrupadas por proyecto/,
   );
   assert.match(mcpServer, /destructiveHint: true/);
   assert.match(mcpServer, /confirm_title/);

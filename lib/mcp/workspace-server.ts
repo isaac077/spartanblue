@@ -2774,7 +2774,7 @@ export function createWorkspaceMcpServer(options: WorkspaceServerOptions) {
     {
       title: "Generar reporte semanal",
       description:
-        "Genera el PDF semanal breve de una persona usando los títulos y fechas de sus tareas asignadas pendientes. Las tareas de WMP incluyen la etiqueta de su división o proyecto, por ejemplo Digital o Legal.",
+        "Genera el PDF semanal breve de una persona usando los títulos y fechas de sus tareas asignadas pendientes, agrupadas por proyecto.",
       inputSchema: { person_id: z.string().uuid() },
       outputSchema: RESULT_SCHEMA,
       annotations: externalActionAnnotations,

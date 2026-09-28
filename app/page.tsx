@@ -129,7 +129,7 @@ type LegacyDownloadNavigator = Navigator & {
   msSaveOrOpenBlob?: (blob: Blob, filename?: string) => boolean;
 };
 
-const BUBBLE_UP_STORAGE_KEY = "tw-workspace-bubble-up-v1";
+const BUBBLE_UP_STORAGE_KEY = "spartanblue-workspace-bubble-up-v1";
 
 function readBubbleUpPreferences(): Record<string, string[]> {
   if (typeof window === "undefined") return {};
@@ -2816,7 +2816,9 @@ export default function Home() {
   async function handleAuth(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!supabase) {
-      setAuthMessage("Estamos preparando este nuevo espacio. El registro estará disponible al conectar su base de datos.");
+      setAuthMessage(
+        "El registro no está disponible porque falta configurar el servicio de acceso de Spartanblue.",
+      );
       return;
     }
     const form = new FormData(event.currentTarget);
@@ -2824,43 +2826,51 @@ export default function Home() {
     const password = String(form.get("password"));
     setAuthBusy(true);
     setAuthMessage("");
-    if (authMode === "signup") {
-      if (
-        password.length < 12 ||
-        !/[a-z]/.test(password) ||
-        !/[A-Z]/.test(password) ||
-        !/[0-9]/.test(password) ||
-        !/[^A-Za-z0-9]/.test(password)
-      ) {
-        setAuthMessage(
-          "Usa al menos 12 caracteres con mayúscula, minúscula, número y símbolo.",
-        );
-        setAuthBusy(false);
-        return;
-      }
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: String(form.get("name") || "").trim(),
-            area_name: String(form.get("area") || "").trim(),
+    try {
+      if (authMode === "signup") {
+        if (
+          password.length < 12 ||
+          !/[a-z]/.test(password) ||
+          !/[A-Z]/.test(password) ||
+          !/[0-9]/.test(password) ||
+          !/[^A-Za-z0-9]/.test(password)
+        ) {
+          setAuthMessage(
+            "Usa al menos 12 caracteres con mayúscula, minúscula, número y símbolo.",
+          );
+          return;
+        }
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              full_name: String(form.get("name") || "").trim(),
+              area_name: String(form.get("area") || "").trim(),
+            },
           },
-        },
-      });
+        });
+        setAuthMessage(
+          error
+            ? error.message
+            : data.session
+              ? "Cuenta creada. Ya puedes comenzar."
+              : "Cuenta creada. Revisa tu correo para confirmar la cuenta y después inicia sesión.",
+        );
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (error) setAuthMessage(error.message);
+      }
+    } catch {
       setAuthMessage(
-        error
-          ? error.message
-          : "Cuenta creada. Tu sesión está lista para comenzar.",
+        "No pudimos conectar con el servicio de acceso. Inténtalo de nuevo en unos minutos.",
       );
-    } else {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (error) setAuthMessage(error.message);
+    } finally {
+      setAuthBusy(false);
     }
-    setAuthBusy(false);
   }
 
   function passwordMeetsRequirements(password: string) {
@@ -6626,11 +6636,7 @@ export default function Home() {
                 userId={currentAssigneeId}
                 directory={directory}
                 demo={demo}
-                showStorageMeter={
-                  !demo &&
-                  session?.user?.email?.trim().toLowerCase() ===
-                    "malondra1508@gmail.com"
-                }
+                showStorageMeter={!demo && Boolean(session)}
                 onToast={flash}
               />
             )}

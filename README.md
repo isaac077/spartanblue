@@ -9,10 +9,10 @@ Este repositorio pertenece exclusivamente al proyecto Vercel `spartanblue`
 El registro admite correos personales y corporativos. Las migraciones crean
 la estructura vacía, sin proyectos, personas ni plantillas de muestra.
 
-Google Drive y Gmail deben autorizarse con `malondra1508@gmail.com`, con una
-carpeta y credenciales propias. No copiar variables de la instalación anterior.
-Tickets y reportes externos requieren servicios nuevos; sus URLs no tienen
-un valor predeterminado que apunte a la aplicación original.
+Google Drive y Gmail requieren credenciales propias de la cuenta de Google
+Workspace que almacenará los archivos y enviará los correos. No copies variables
+de otros despliegues. Tickets y reportes externos requieren servicios propios;
+sus URLs no tienen un valor predeterminado que apunte a otra aplicación.
 
 Logo, favicon y fotografía de costa: https://spartanblueconsultants.com/.
 

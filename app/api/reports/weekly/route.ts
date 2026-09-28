@@ -36,57 +36,8 @@ type ReportAccount = {
   }>;
 };
 
-const REPORT_ACCOUNTS: Array<Omit<ReportAccount, "activities">> = [
-  { accountId: "wmp-mexico-advisors", accountName: "WMP Mexico Advisors" },
-  { accountId: "the-wmp-club", accountName: "The WMP Club" },
-  { accountId: "consul", accountName: "HK" },
-  { accountId: "acensblue", accountName: "Acensblue" },
-  { accountId: "centro-aleman-queretaro", accountName: "Centro Alemán Querétaro" },
-  { accountId: "thomas-wagner-mx", accountName: "ThomasWagner.MX" },
-];
 const REPORT_SERVICE_URL =
   process.env.WEEKLY_REPORT_SERVICE_URL || "";
-
-function normalizeName(value: string) {
-  return value
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLocaleLowerCase("es-MX")
-    .replace(/[^a-z0-9]+/g, " ")
-    .trim();
-}
-
-function reportAccountId(projectName: string) {
-  const normalized = normalizeName(projectName);
-  // The WMP Club is intentionally checked first: it remains its own account.
-  if (normalized.includes("the wmp club") || normalized.includes("wmp club"))
-    return "the-wmp-club";
-  if (normalized.includes("wmp")) return "wmp-mexico-advisors";
-  if (normalized.includes("acensblue")) return "acensblue";
-  if (/\bhk\b/.test(normalized) || normalized.includes("consul")) return "consul";
-  if (
-    normalized.includes("centro aleman") ||
-    normalized.includes("aleman queretaro")
-  )
-    return "centro-aleman-queretaro";
-  if (
-    normalized.includes("thomaswagner") ||
-    normalized.includes("thomas wagner")
-  )
-    return "thomas-wagner-mx";
-  return null;
-}
-
-function wmpProjectLabel(projectName: string) {
-  const label = projectName
-    .replace(/\bwmp\b/gi, " ")
-    .replace(/\bm[eé]xico\b/gi, " ")
-    .replace(/\badvisors?\b/gi, " ")
-    .replace(/^[\s\-–—|:./]+|[\s\-–—|:./]+$/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-  return cleanUntrustedText(label, 60);
-}
 
 function singleRelation<T>(relation: T | T[] | null) {
   return Array.isArray(relation) ? relation[0] || null : relation;
@@ -206,44 +157,29 @@ export async function POST(request: Request) {
     pendingTasks = (data || []) as unknown as PendingTaskRow[];
   }
 
-  const accounts: ReportAccount[] = REPORT_ACCOUNTS.map((account) => ({
-    ...account,
-    activities: [],
-  }));
-  const accountById = new Map(accounts.map((account) => [account.accountId, account]));
-  const unmappedProjects = new Set<string>();
+  const accountByProject = new Map<string, ReportAccount>();
 
   for (const task of pendingTasks) {
     const project = singleRelation(task.projects);
-    const projectName = cleanUntrustedText(project?.name, 160) || "Proyecto sin nombre";
-    const accountId = reportAccountId(projectName);
-    if (!accountId) {
-      unmappedProjects.add(projectName);
-      continue;
+    if (!project?.id) continue;
+    let account = accountByProject.get(project.id);
+    if (!account) {
+      account = {
+        accountId: project.id,
+        accountName: cleanUntrustedText(project.name, 160) || "Proyecto sin nombre",
+        activities: [],
+      };
+      accountByProject.set(project.id, account);
     }
-    const account = accountById.get(accountId);
-    if (!account) continue;
     const title = cleanUntrustedText(task.title, 500) || "Tarea sin título";
-    const projectLabel =
-      accountId === "wmp-mexico-advisors"
-        ? wmpProjectLabel(projectName)
-        : "";
     account.activities.push({
       id: `workspace-${task.id}`,
-      topic: projectLabel ? `[${projectLabel}] ${title}` : title,
+      topic: title,
       status: reportTaskStatus(task.status),
       update: taskDueLabel(task.due_date),
     });
   }
-
-  if (unmappedProjects.size > 0) {
-    return noStoreJson(
-      {
-        error: `Hay tareas en proyectos sin cuenta de reporte: ${Array.from(unmappedProjects).slice(0, 6).join(", ")}`,
-      },
-      422,
-    );
-  }
+  const accounts = Array.from(accountByProject.values());
 
   const today = new Intl.DateTimeFormat("en-CA", {
     year: "numeric",
@@ -282,7 +218,7 @@ export async function POST(request: Request) {
     const pdf = await upstream.arrayBuffer();
     if (pdf.byteLength < 5 || new TextDecoder().decode(pdf.slice(0, 5)) !== "%PDF-")
       return noStoreJson({ error: "El generador devolvió un archivo inválido" }, 502);
-    const fallback = `Reporte_Semanal_WMP_${today}_${person.full_name || "Responsable"}.pdf`;
+    const fallback = `Reporte_Semanal_Spartanblue_${today}_${person.full_name || "Responsable"}.pdf`;
     return new Response(pdf, {
       status: 200,
       headers: {
