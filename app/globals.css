@@ -9297,3 +9297,267 @@ textarea {
     margin-bottom: 10px;
   }
 }
+
+/* Mobile workspace: primary actions stay within thumb reach. */
+.mobile-bottom-nav,
+.mobile-new-task,
+.mobile-nav-backdrop {
+  display: none;
+}
+
+@media (max-width: 780px) {
+  html,
+  body {
+    width: 100%;
+    overflow-x: hidden;
+  }
+  .app-shell {
+    min-height: 100dvh;
+  }
+  .main-area {
+    height: 100dvh;
+    padding-bottom: calc(68px + env(safe-area-inset-bottom));
+    overscroll-behavior-y: contain;
+  }
+  .sidebar {
+    height: 100dvh;
+    width: min(340px, 88vw);
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+  }
+  .sidebar.mobile-open {
+    z-index: 81;
+  }
+  .mobile-nav-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    border: 0;
+    background: rgba(19, 32, 42, 0.48);
+  }
+  .primary-nav button,
+  .primary-nav a,
+  .nav-section > button,
+  .project-nav-scroll > button,
+  .project-nav-scroll > a {
+    min-height: 48px;
+  }
+  .mobile-bottom-nav {
+    position: fixed;
+    z-index: 70;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    min-height: calc(66px + env(safe-area-inset-bottom));
+    padding: 4px max(7px, env(safe-area-inset-right)) env(safe-area-inset-bottom) max(7px, env(safe-area-inset-left));
+    border-top: 1px solid var(--line);
+    background: var(--white);
+    box-shadow: 0 -8px 24px rgba(18, 40, 53, 0.08);
+  }
+  .mobile-bottom-nav button {
+    min-width: 0;
+    min-height: 56px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .mobile-bottom-nav button.active {
+    color: var(--green);
+    background: rgba(50, 123, 159, 0.1);
+  }
+  .mobile-new-task {
+    position: fixed;
+    z-index: 69;
+    right: max(16px, env(safe-area-inset-right));
+    bottom: calc(82px + env(safe-area-inset-bottom));
+    min-height: 52px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 0;
+    border-radius: 999px;
+    padding: 0 18px;
+    color: #fff;
+    background: var(--green);
+    box-shadow: 0 8px 24px rgba(15, 55, 78, 0.27);
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .topbar {
+    min-height: 60px;
+    gap: 9px;
+    padding-inline: 10px;
+  }
+  .topbar .mobile-menu,
+  .topbar .bell-button {
+    width: 44px;
+    height: 44px;
+  }
+  .search-box {
+    min-width: 0;
+    padding: 0 11px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--white);
+  }
+  .search-box input {
+    min-width: 0;
+    width: 100%;
+    font-size: 16px;
+  }
+  .search-box input::placeholder {
+    color: transparent;
+  }
+  .search-box:focus-within input::placeholder {
+    color: var(--muted);
+  }
+  .content {
+    min-width: 0;
+    padding: 18px 14px 120px;
+  }
+  .project-header h1,
+  .simple-view h1 {
+    font-size: clamp(25px, 7vw, 32px);
+    line-height: 1.16;
+    overflow-wrap: anywhere;
+  }
+  .project-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+  }
+  .project-actions > button,
+  .project-actions > .project-action-wrap {
+    min-width: 0;
+    min-height: 44px;
+  }
+  .project-actions > .primary-button {
+    grid-column: 1 / -1;
+    justify-content: center;
+  }
+  .view-tabs {
+    align-items: center;
+    height: auto;
+    min-height: 56px;
+    gap: 3px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+  .view-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .view-tabs > button {
+    flex: 0 0 auto;
+    min-height: 44px;
+    white-space: nowrap;
+  }
+  .view-tabs > span {
+    flex: 0 0 8px;
+  }
+  .filter-wrap {
+    flex: 0 0 auto;
+  }
+  .kanban {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(82vw, 350px);
+    grid-template-columns: none;
+    min-width: 0;
+    max-width: calc(100vw - 28px);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    padding-bottom: 16px;
+  }
+  .kanban-column {
+    scroll-snap-align: start;
+  }
+  .todo-row {
+    min-width: 0;
+    grid-template-columns: 32px minmax(0, 1fr) 36px;
+    min-height: 70px;
+    gap: 10px;
+    padding: 9px 12px;
+  }
+  .todo-row .todo-main {
+    min-width: 0;
+  }
+  .todo-main strong,
+  .todo-main small {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+  }
+  .todo-check,
+  .todo-row .card-more {
+    min-width: 36px;
+    min-height: 44px;
+  }
+  .notification-drawer {
+    width: 100vw;
+    bottom: calc(66px + env(safe-area-inset-bottom));
+  }
+  .desktop-notification-prompt {
+    display: none;
+  }
+  .task-creator-fullscreen,
+  .task-detail.fullscreen {
+    height: 100dvh;
+    max-height: 100dvh;
+  }
+  .task-creator-topbar,
+  .task-detail.fullscreen > .modal-head {
+    padding-top: max(12px, env(safe-area-inset-top));
+  }
+  .task-creator-shell,
+  .task-detail.fullscreen {
+    padding-bottom: calc(28px + env(safe-area-inset-bottom));
+  }
+  .modal-layer:not(.task-creator-layer):not(.task-fullscreen-layer) {
+    align-items: end;
+    padding: 0;
+  }
+  .modal-card,
+  .confirm-card,
+  .person-detail {
+    width: 100%;
+    max-height: 92dvh;
+    overflow-y: auto;
+    border-radius: 20px 20px 0 0;
+    padding: 22px 18px calc(24px + env(safe-area-inset-bottom));
+  }
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 370px) {
+  .mobile-bottom-nav button { font-size: 10px; }
+  .mobile-new-task span { display: none; }
+  .mobile-new-task { width: 52px; justify-content: center; padding: 0; }
+}
+
+:root[data-theme="dark"] .mobile-bottom-nav,
+:root[data-theme="dark"] .search-box {
+  background: #1b222c;
+}
