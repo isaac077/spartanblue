@@ -1624,6 +1624,13 @@ function TaskCard({
   );
 }
 
+function preferredProjectView(): ProjectView {
+  return typeof window !== "undefined" &&
+    window.matchMedia("(max-width: 780px)").matches
+    ? "list"
+    : "board";
+}
+
 export default function Home() {
   const [authReady, setAuthReady] = useState(!hasSupabase);
   const [session, setSession] = useState<Session | null>(null);
@@ -1710,7 +1717,7 @@ export default function Home() {
     hasSupabase ? "" : "demo-1",
   );
   const [view, setView] = useState("home");
-  const [projectView, setProjectView] = useState<ProjectView>("board");
+  const [projectView, setProjectView] = useState<ProjectView>(preferredProjectView);
   const [statusFilter, setStatusFilter] = useState<Status | "all">("all");
   const [filterOpen, setFilterOpen] = useState(false);
   const [newTaskStatus, setNewTaskStatus] = useState<Status>("todo");
@@ -2022,7 +2029,7 @@ export default function Home() {
     setProject(linkedProject.name);
     setActiveProjectId(linkedProject.id);
     setView("board");
-    setProjectView("board");
+    setProjectView(preferredProjectView());
     setTasks([linkedTask]);
     setWorkspaceTasks((current) => [
       {
@@ -2733,7 +2740,7 @@ export default function Home() {
     setProject("Lanzamiento Q3");
     setActiveProjectId("demo-1");
     setView("home");
-    setProjectView("board");
+    setProjectView(preferredProjectView());
     window.history.replaceState({ workspaceRoute: "home" }, "", "/");
   }
 
@@ -3613,7 +3620,7 @@ export default function Home() {
     setProject(next.name);
     setActiveProjectId(next.id);
     setView("board");
-    setProjectView("board");
+    setProjectView(preferredProjectView());
     setStatusFilter("all");
     setMobileNav(false);
     setProjectMemberModal(false);
@@ -5508,7 +5515,7 @@ export default function Home() {
     setView(
       note.type === "announcement" && !note.task_id ? "messages" : "board",
     );
-    setProjectView("board");
+    setProjectView(preferredProjectView());
     setStatusFilter("all");
     selectedTaskIdRef.current = null;
     setSelectedTask(null);
@@ -5925,7 +5932,7 @@ export default function Home() {
             </button>
             <button
               className={view === "mytasks" ? "active" : ""}
-              onClick={() => setView("mytasks")}
+              onClick={() => { setView("mytasks"); setMobileNav(false); }}
             >
               <ListTodo size={18} />
               Mis tareas
@@ -5935,6 +5942,7 @@ export default function Home() {
               className={view === "inbox" ? "active" : ""}
               onClick={() => {
                 setView("inbox");
+                setMobileNav(false);
                 setNotificationTab("new");
                 setNotificationOpen(true);
               }}
@@ -6059,28 +6067,28 @@ export default function Home() {
             </div>
             <button
               className={view === "backlog" ? "active" : ""}
-              onClick={() => setView("backlog")}
+              onClick={() => { setView("backlog"); setMobileNav(false); }}
             >
               <ClipboardList size={17} />
               Backlog y presets
             </button>
             <button
               className={view === "team" ? "active" : ""}
-              onClick={() => setView("team")}
+              onClick={() => { setView("team"); setMobileNav(false); }}
             >
               <Users size={17} />
               Personas y áreas
             </button>
             <button
               className={view === "archive" ? "active" : ""}
-              onClick={() => setView("archive")}
+              onClick={() => { setView("archive"); setMobileNav(false); }}
             >
               <Archive size={17} />
               Archivados
             </button>
             <button
               className={view === "settings" ? "active" : ""}
-              onClick={() => setView("settings")}
+              onClick={() => { setView("settings"); setMobileNav(false); }}
             >
               <Settings size={17} />
               Configuración
@@ -6088,7 +6096,7 @@ export default function Home() {
           </div>
         </div>
         <div className="sidebar-footer">
-          <button onClick={() => setView("settings")}>
+          <button onClick={() => { setView("settings"); setMobileNav(false); }}>
             <Avatar id={currentAssigneeId} person={currentPerson} />
             <span>
               <strong>
@@ -6100,6 +6108,15 @@ export default function Home() {
           </button>
         </div>
       </aside>
+
+      {mobileNav && (
+        <button
+          type="button"
+          className="mobile-nav-backdrop"
+          aria-label="Cerrar menú"
+          onClick={() => setMobileNav(false)}
+        />
+      )}
 
       <section className="main-area">
         <header className="topbar">
@@ -7599,6 +7616,39 @@ export default function Home() {
           </div>
         )}
       </section>
+
+      <nav className="mobile-bottom-nav" aria-label="Navegación principal">
+        <button type="button" className={view === "home" ? "active" : ""} onClick={goHome} aria-current={view === "home" ? "page" : undefined}>
+          <LayoutDashboard size={21} aria-hidden="true" /><span>Inicio</span>
+        </button>
+        <button type="button" className={view === "mytasks" ? "active" : ""} onClick={() => setView("mytasks")} aria-current={view === "mytasks" ? "page" : undefined}>
+          <ListTodo size={21} aria-hidden="true" /><span>Mis tareas</span>
+        </button>
+        <button type="button" className={view === "board" ? "active" : ""} onClick={() => {
+          setProjectsMenuOpen(true);
+          setMobileNav(true);
+        }} aria-label="Abrir proyectos" aria-expanded={mobileNav}>
+          <FolderInput size={21} aria-hidden="true" /><span>Proyectos</span>
+        </button>
+        <button type="button" className={view === "messages" ? "active" : ""} onClick={() => setView("messages")} aria-current={view === "messages" ? "page" : undefined}>
+          <MessageSquareText size={21} aria-hidden="true" /><span>Mensajes</span>
+        </button>
+        <button type="button" className={mobileNav ? "active" : ""} onClick={() => setMobileNav(true)} aria-label="Abrir menú completo" aria-expanded={mobileNav}>
+          <Menu size={21} aria-hidden="true" /><span>Más</span>
+        </button>
+      </nav>
+
+      {projects.length > 0 && !taskModal && !selectedTask && !notificationOpen && !mobileNav && (
+        <button
+          type="button"
+          className="mobile-new-task"
+          onClick={() => openTaskCreator()}
+          aria-label="Crear tarea"
+        >
+          <Plus size={23} aria-hidden="true" />
+          <span>Nueva tarea</span>
+        </button>
+      )}
 
       {session &&
         !demo &&
